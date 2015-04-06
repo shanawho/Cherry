@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Cherry</string>
+
+    <string name="specialty">My specialty is:</string>
+    <string name="sync">SYNC TO CHAIR</string>
+    <string name="modeling">3D modeling</string>
+    <string name="digfab">Digital fabrication</string>
+    <string name="product">Product design</string>
+    <string name="visual">Visual design</string>
+    <string name="webdev">Web development</string>
+    <string name="action_settings">Settings</string>
+</resources>
