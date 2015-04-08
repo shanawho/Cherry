@@ -20,6 +20,10 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile files('libs/huelocalsdk.jar')
+    compile files('libs/huesdkresources.jar')
+    // compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:22.0.0'
+    compile files('/Users/Doug/Development/Cherry/libs/huelocalsdk.jar')
+    compile files('/Users/Doug/Development/Cherry/libs/huesdkresources.jar')
 }

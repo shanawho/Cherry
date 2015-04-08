@@ -12,6 +12,16 @@ import android.widget.RadioGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
 
+//import com.philips.lighting.data.AccessPointListAdapter;
+//import com.philips.lighting.data.HueSharedPreferences;
+import com.philips.lighting.hue.sdk.PHAccessPoint;
+import com.philips.lighting.hue.sdk.PHBridgeSearchManager;
+import com.philips.lighting.hue.sdk.PHHueSDK;
+import com.philips.lighting.hue.sdk.PHMessageType;
+import com.philips.lighting.hue.sdk.PHSDKListener;
+import com.philips.lighting.model.PHBridge;
+import com.philips.lighting.model.PHHueError;
+import com.philips.lighting.model.PHHueParsingError;
 
 public class selectOption extends ActionBarActivity {
 
