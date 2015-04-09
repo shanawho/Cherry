@@ -10,6 +10,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
+import com.example.shana.cherry.app.ColorUtil;
 
 import android.util.Log;
 import java.util.*;
@@ -17,6 +18,13 @@ import java.util.*;
 //import com.philips.lighting.data.AccessPointListAdapter;
 //import com.philips.lighting.data.HueSharedPreferences;
 import com.example.shana.cherry.R;
+import com.philips.lighting.hue.listener.PHLightListener;
+import com.philips.lighting.hue.sdk.PHHueSDK;
+import com.philips.lighting.model.PHBridge;
+import com.philips.lighting.model.PHBridgeResource;
+import com.philips.lighting.model.PHHueError;
+import com.philips.lighting.model.PHLight;
+import com.philips.lighting.model.PHLightState;
 
 import org.altbeacon.beacon.BeaconConsumer;
 import org.altbeacon.beacon.Beacon;
@@ -30,12 +38,17 @@ public class selectOption extends ActionBarActivity implements BeaconConsumer {
     private static final String TAG = ".Cherry";
     private RegionBootstrap regionBootstrap;
     private BeaconManager beaconManager;
-
+    private PHHueSDK phHueSDK;
+    private PHBridge bridge;
+    private List<PHLight> allLights;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_option);
+        phHueSDK = PHHueSDK.create();
+        bridge = phHueSDK.getSelectedBridge();
+        allLights = bridge.getResourceCache().getAllLights();
 
         createRadioGroup();
     }
@@ -99,6 +112,7 @@ public class selectOption extends ActionBarActivity implements BeaconConsumer {
                 public void onClick(View v) {
                     radioBtn.setBackgroundColor(Color.parseColor(colors[count]));
                     radioBtn.setTextColor(Color.parseColor("#FFFFFF"));
+                    setLightColor(colors[count]);
 
                 }
             });
@@ -109,6 +123,45 @@ public class selectOption extends ActionBarActivity implements BeaconConsumer {
         return true;
     }
 
+    private void setLightColor(String c) {
+        for (PHLight light : allLights) {
+            PHLightState lightState = new PHLightState();
+            List<Float> colorOut = ColorUtil.getRGBtoXY(c);
+            lightState.setX(colorOut.get(0));
+            lightState.setY(colorOut.get(1));
+            // lightState.setHue(25);
+
+            // To validate your lightstate is valid (before sending to the bridge) you can use:
+            // String validState = lightState.validateState();
+            bridge.updateLightState(light, lightState, listener);
+            //  bridge.updateLightState(light, lightState);   // If no bridge response is required then use this simpler form.
+        }
+    }
+
+    // For handling responses from the bridge.
+    PHLightListener listener = new PHLightListener() {
+
+        @Override
+        public void onSuccess() {
+        }
+
+        @Override
+        public void onStateUpdate(Map<String, String> arg0, List<PHHueError> arg1) {
+            Log.w(TAG, "Light has updated");
+        }
+
+        @Override
+        public void onError(int arg0, String arg1) {}
+
+        @Override
+        public void onReceivingLightDetails(PHLight arg0) {}
+
+        @Override
+        public void onReceivingLights(List<PHBridgeResource> arg0) {}
+
+        @Override
+        public void onSearchComplete() {}
+    };
 
     @Override
     public void onBeaconServiceConnect() {
