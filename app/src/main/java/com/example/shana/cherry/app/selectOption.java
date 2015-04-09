@@ -10,15 +10,11 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
-import com.example.shana.cherry.app.ColorUtil;
-
 import android.util.Log;
 import java.util.*;
+import com.example.shana.cherry.app.ColorUtil;
 
-//import com.philips.lighting.data.AccessPointListAdapter;
-//import com.philips.lighting.data.HueSharedPreferences;
 import com.example.shana.cherry.R;
-import com.philips.lighting.hue.listener.PHLightListener;
 import com.philips.lighting.hue.sdk.PHHueSDK;
 import com.philips.lighting.model.PHBridge;
 import com.philips.lighting.model.PHBridgeResource;
