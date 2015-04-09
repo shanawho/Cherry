@@ -11,7 +11,7 @@ import android.graphics.Color;
  */
 public class ColorUtil {
 
-    public static List<Float> getRGBtoXY(String colorIn) {
+    public static List<Float> colorToXY(String colorIn) {
         // For the hue bulb the corners of the triangle are:
         // -Red: 0.675, 0.322
         // -Green: 0.4091, 0.518

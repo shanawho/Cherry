@@ -35,12 +35,20 @@ import org.altbeacon.beacon.RangeNotifier;
 import org.altbeacon.beacon.BeaconManager;
 
 public class selectOption extends ActionBarActivity implements BeaconConsumer {
+
+    // Bluetooth Beacon
     private static final String TAG = ".Cherry";
     private RegionBootstrap regionBootstrap;
     private BeaconManager beaconManager;
+
+    // Hue
     private PHHueSDK phHueSDK;
     private PHBridge bridge;
     private List<PHLight> allLights;
+
+    // Contextual
+    String[] choices = new String[]{"3D modeling", "Digital fabrication", "Product design", "Visual design", "Web development"};
+    String[] colors = new String[]{"#ef4545", "#f8971c", "#fee101", "#55b847", "#25c4f3"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +57,6 @@ public class selectOption extends ActionBarActivity implements BeaconConsumer {
         phHueSDK = PHHueSDK.create();
         bridge = phHueSDK.getSelectedBridge();
         allLights = bridge.getResourceCache().getAllLights();
-
         createRadioGroup();
     }
 
@@ -76,9 +83,6 @@ public class selectOption extends ActionBarActivity implements BeaconConsumer {
         return super.onOptionsItemSelected(item);
     }
 
-    String[] choices = new String[]{"3D modeling", "Digital fabrication", "Product design", "Visual design", "Web development"};
-    String[] colors = new String[]{"#ef4545", "#f8971c", "#fee101", "#55b847", "#25c4f3"};
-
     public boolean createRadioGroup() {
         RadioGroup radioGroup = (RadioGroup) findViewById(R.id.radioGroup);
 
@@ -95,7 +99,6 @@ public class selectOption extends ActionBarActivity implements BeaconConsumer {
                 }
             }
         });
-
 
         for (int i = 0; i < choices.length; i++) {
             final RadioButton radioBtn = new RadioButton(this);
@@ -116,7 +119,6 @@ public class selectOption extends ActionBarActivity implements BeaconConsumer {
 
                 }
             });
-
             radioGroup.addView(radioBtn);
 
         }
@@ -126,42 +128,12 @@ public class selectOption extends ActionBarActivity implements BeaconConsumer {
     private void setLightColor(String c) {
         for (PHLight light : allLights) {
             PHLightState lightState = new PHLightState();
-            List<Float> colorOut = ColorUtil.getRGBtoXY(c);
+            List<Float> colorOut = ColorUtil.colorToXY(c);
             lightState.setX(colorOut.get(0));
             lightState.setY(colorOut.get(1));
-            // lightState.setHue(25);
-
-            // To validate your lightstate is valid (before sending to the bridge) you can use:
-            // String validState = lightState.validateState();
-            bridge.updateLightState(light, lightState, listener);
-            //  bridge.updateLightState(light, lightState);   // If no bridge response is required then use this simpler form.
+            bridge.updateLightState(light, lightState);
         }
     }
-
-    // For handling responses from the bridge.
-    PHLightListener listener = new PHLightListener() {
-
-        @Override
-        public void onSuccess() {
-        }
-
-        @Override
-        public void onStateUpdate(Map<String, String> arg0, List<PHHueError> arg1) {
-            Log.w(TAG, "Light has updated");
-        }
-
-        @Override
-        public void onError(int arg0, String arg1) {}
-
-        @Override
-        public void onReceivingLightDetails(PHLight arg0) {}
-
-        @Override
-        public void onReceivingLights(List<PHBridgeResource> arg0) {}
-
-        @Override
-        public void onSearchComplete() {}
-    };
 
     @Override
     public void onBeaconServiceConnect() {

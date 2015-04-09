@@ -4,24 +4,40 @@
     android:paddingTop="@dimen/activity_vertical_margin" tools:context=".selectOption">
 
     <TextView android:text="@string/specialty" android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:id="@+id/specialtyText"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="17dp" />
 
 
         <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="45dp"
             android:layout_marginLeft="20dp"
             android:orientation="vertical"
             android:id="@+id/radioGroup">
         </RadioGroup>
 
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:layout_alignParentBottom="true"
-            android:padding="0dp"
-            android:text="@string/sync" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/nearest"
+        android:id="@+id/nearestChairText"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignBottom="@+id/distance_measurement" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="none"
+        android:id="@+id/distance_measurement"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/specialtyText"
+        android:layout_toEndOf="@+id/specialtyText" />
 
 
 </RelativeLayout>
