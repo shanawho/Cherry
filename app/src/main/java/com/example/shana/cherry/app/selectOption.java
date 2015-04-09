@@ -1,6 +1,5 @@
-package com.example.shana.cherry;
+package com.example.shana.cherry.app;
 
-import android.app.ActionBar;
 import android.graphics.Color;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -12,21 +11,12 @@ import android.widget.RadioGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
 
-import android.app.Application;
-import android.content.Intent;
 import android.util.Log;
 import java.util.*;
 
 //import com.philips.lighting.data.AccessPointListAdapter;
 //import com.philips.lighting.data.HueSharedPreferences;
-import com.philips.lighting.hue.sdk.PHAccessPoint;
-import com.philips.lighting.hue.sdk.PHBridgeSearchManager;
-import com.philips.lighting.hue.sdk.PHHueSDK;
-import com.philips.lighting.hue.sdk.PHMessageType;
-import com.philips.lighting.hue.sdk.PHSDKListener;
-import com.philips.lighting.model.PHBridge;
-import com.philips.lighting.model.PHHueError;
-import com.philips.lighting.model.PHHueParsingError;
+import com.example.shana.cherry.R;
 
 import org.altbeacon.beacon.BeaconConsumer;
 import org.altbeacon.beacon.Beacon;
@@ -119,29 +109,6 @@ public class selectOption extends ActionBarActivity implements BeaconConsumer {
         return true;
     }
 
-    /* Start ranging when beacon is detected */
-
-    @Override
-    public void didEnterRegion(Region region) {
-        Log.i(TAG, "I just saw an beacon for the first time!");
-        try {
-            // start ranging for beacons.  This will provide an update once per second with the estimated
-            // distance to the beacon in the didRAngeBeaconsInRegion method.
-            beaconManager.startRangingBeaconsInRegion(new Region("myRangingUniqueId", null, null, null));
-            beaconManager.setRangeNotifier(this);
-        } catch (RemoteException e) {   }
-    }
-
-     /* Trigger action if within a certain range */
-    @Override
-    public void didRangeBeaconsInRegion(Collection<Beacon> beacons, Region region) {
-        for (Beacon beacon: beacons) {
-            if (beacon.getDistance() < 5.0) {
-                Log.d(TAG, "I see a beacon that is less than 5 meters away.");
-                // Perform distance-specific action here
-            }
-        }
-    }
 
     @Override
     public void onBeaconServiceConnect() {
