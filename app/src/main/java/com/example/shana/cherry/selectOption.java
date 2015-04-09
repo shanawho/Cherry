@@ -119,6 +119,30 @@ public class selectOption extends ActionBarActivity implements BeaconConsumer {
         return true;
     }
 
+    /* Start ranging when beacon is detected */
+
+    @Override
+    public void didEnterRegion(Region region) {
+        Log.i(TAG, "I just saw an beacon for the first time!");
+        try {
+            // start ranging for beacons.  This will provide an update once per second with the estimated
+            // distance to the beacon in the didRAngeBeaconsInRegion method.
+            beaconManager.startRangingBeaconsInRegion(new Region("myRangingUniqueId", null, null, null));
+            beaconManager.setRangeNotifier(this);
+        } catch (RemoteException e) {   }
+    }
+
+     /* Trigger action if within a certain range */
+    @Override
+    public void didRangeBeaconsInRegion(Collection<Beacon> beacons, Region region) {
+        for (Beacon beacon: beacons) {
+            if (beacon.getDistance() < 5.0) {
+                Log.d(TAG, "I see a beacon that is less than 5 meters away.");
+                // Perform distance-specific action here
+            }
+        }
+    }
+
     @Override
     public void onBeaconServiceConnect() {
         beaconManager.setRangeNotifier(new RangeNotifier() {

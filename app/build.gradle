@@ -17,6 +17,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
 }
 
 dependencies {
@@ -27,4 +28,7 @@ dependencies {
     compile files('/Users/Doug/Development/Cherry/libs/huelocalsdk.jar')
     compile files('/Users/Doug/Development/Cherry/libs/huesdkresources.jar')
     compile project(':android-beacon-library-2.1.4')
+    compile files('/Users/shana/AndroidStudioProjects/Cherry/libs/huelocalsdk.jar')
+    compile files('/Users/shana/AndroidStudioProjects/Cherry/libs/huesdkresources.jar')
+
 }
