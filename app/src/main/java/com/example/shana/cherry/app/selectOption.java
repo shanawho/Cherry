@@ -3,6 +3,7 @@ package com.example.shana.cherry.app;
 import android.graphics.Color;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.os.RemoteException;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -11,6 +12,8 @@ import android.widget.RadioGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
 import android.util.Log;
+import android.widget.TextView;
+
 import java.util.*;
 import com.example.shana.cherry.app.ColorUtil;
 
@@ -33,7 +36,7 @@ import org.altbeacon.beacon.BeaconManager;
 public class selectOption extends ActionBarActivity implements BeaconConsumer {
 
     // Bluetooth Beacon
-    private static final String TAG = ".Cherry";
+    private static final String TAG = "[Beacon Scan]";
     private RegionBootstrap regionBootstrap;
     private BeaconManager beaconManager;
 
@@ -50,9 +53,17 @@ public class selectOption extends ActionBarActivity implements BeaconConsumer {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_option);
+
+        // Hue initialization
         phHueSDK = PHHueSDK.create();
         bridge = phHueSDK.getSelectedBridge();
         allLights = bridge.getResourceCache().getAllLights();
+
+        // Beacon scan initialization
+        beaconManager = BeaconManager.getInstanceForApplication(this);
+        beaconManager.bind(this);
+
+        // View initialization
         createRadioGroup();
     }
 
@@ -136,15 +147,52 @@ public class selectOption extends ActionBarActivity implements BeaconConsumer {
         beaconManager.setRangeNotifier(new RangeNotifier() {
             @Override
             public void didRangeBeaconsInRegion(Collection<Beacon> beacons, Region region) {
+                // TODO: 'region' should be defined as the active space around the chair to light.
+                Beacon foundBeacon;
                 if (beacons.size() > 0) {
-                    Log.i(TAG, "The first beacon I see is about "+beacons.iterator().next().getDistance()+" meters away.");
+                    foundBeacon = beacons.iterator().next();
+                    final double distance = foundBeacon.getDistance();
+                    Log.i(TAG, "The first beacon I see is about " + foundBeacon.getDistance() + " meters away.");
+                    // TODO: once working, modify the Hue directly and get it off the UI thread.
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            parseDistance(distance, true);
+                        }
+                    });
+                } else {
+                    Log.i(TAG, "No beacons found in range");
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            parseDistance(0, false);
+                        }
+                    });
                 }
             }
         });
 
-//        try {
-//            beaconManager.startRangingBeaconsInRegion(new Region("myRangingUniqueId", null, null, null));
-//        } catch (RemoteException e) {    }
+        try {
+            beaconManager.startRangingBeaconsInRegion(new Region("myRangingUniqueId", null, null, null));
+        } catch (RemoteException e) {
+            Log.i(TAG, "Unable to search for beacons.");
+        }
+    }
+
+    protected void parseDistance(double dis, boolean any) {
+        TextView t = (TextView)findViewById(R.id.distance_measurement);
+        if (any) {
+            String displayedDistance = Double.toString(dis)+" m";
+            t.setText("");
+        } else {
+            t.setText("none found");
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        beaconManager.unbind(this);
     }
 
 }
