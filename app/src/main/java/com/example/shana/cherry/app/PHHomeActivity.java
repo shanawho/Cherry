@@ -115,16 +115,17 @@ public class PHHomeActivity extends Activity implements OnItemClickListener {
 
 
                 /**BELOW is added in from onItemClick **/
-                connectAndSwitch();
+                //connectAndSwitch();
 
-                /*
+
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        adapter.updateData(phHueSDK.getAccessPointsFound());
+                        connectAndSwitch();
+                        // adapter.updateData(phHueSDK.getAccessPointsFound());
                     }
                 });
-                */
+
 
             }
 
@@ -293,7 +294,9 @@ public class PHHomeActivity extends Activity implements OnItemClickListener {
             }
         }
         PHWizardAlertDialog.getInstance().showProgressDialog(R.string.connecting, PHHomeActivity.this);
-        phHueSDK.connect(phHueSDK.getAccessPointsFound().get(0));
+        PHAccessPoint target = phHueSDK.getAccessPointsFound().get(0);
+        target.setUsername(prefs.getUsername());
+        phHueSDK.connect(target);
     }
 
     public void doBridgeSearch() {
