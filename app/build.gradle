@@ -26,4 +26,5 @@ dependencies {
     compile 'com.android.support:appcompat-v7:22.0.0'
     compile files('/Users/Doug/Development/Cherry/libs/huelocalsdk.jar')
     compile files('/Users/Doug/Development/Cherry/libs/huesdkresources.jar')
+    compile project(':android-beacon-library-2.1.4')
 }

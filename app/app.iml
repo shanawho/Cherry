@@ -92,6 +92,7 @@
     <orderEntry type="library" exported="" name="appcompat-v7-22.0.0" level="project" />
     <orderEntry type="library" exported="" name="huesdkresources" level="project" />
     <orderEntry type="library" exported="" name="1_huesdkresources" level="project" />
+    <orderEntry type="module" module-name="android-beacon-library-2.1.4" exported="" />
   </component>
 </module>
 
