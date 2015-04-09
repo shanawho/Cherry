@@ -12,6 +12,11 @@ import android.widget.RadioGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
 
+import android.app.Application;
+import android.content.Intent;
+import android.util.Log;
+import java.util.*;
+
 //import com.philips.lighting.data.AccessPointListAdapter;
 //import com.philips.lighting.data.HueSharedPreferences;
 import com.philips.lighting.hue.sdk.PHAccessPoint;
@@ -23,7 +28,19 @@ import com.philips.lighting.model.PHBridge;
 import com.philips.lighting.model.PHHueError;
 import com.philips.lighting.model.PHHueParsingError;
 
-public class selectOption extends ActionBarActivity {
+import org.altbeacon.beacon.BeaconConsumer;
+import org.altbeacon.beacon.Beacon;
+import org.altbeacon.beacon.startup.BootstrapNotifier;
+import org.altbeacon.beacon.startup.RegionBootstrap;
+import org.altbeacon.beacon.Region;
+import org.altbeacon.beacon.RangeNotifier;
+import org.altbeacon.beacon.BeaconManager;
+
+public class selectOption extends ActionBarActivity implements BeaconConsumer {
+    private static final String TAG = ".Cherry";
+    private RegionBootstrap regionBootstrap;
+    private BeaconManager beaconManager;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,6 +117,22 @@ public class selectOption extends ActionBarActivity {
 
         }
         return true;
+    }
+
+    @Override
+    public void onBeaconServiceConnect() {
+        beaconManager.setRangeNotifier(new RangeNotifier() {
+            @Override
+            public void didRangeBeaconsInRegion(Collection<Beacon> beacons, Region region) {
+                if (beacons.size() > 0) {
+                    Log.i(TAG, "The first beacon I see is about "+beacons.iterator().next().getDistance()+" meters away.");
+                }
+            }
+        });
+
+//        try {
+//            beaconManager.startRangingBeaconsInRegion(new Region("myRangingUniqueId", null, null, null));
+//        } catch (RemoteException e) {    }
     }
 
 }
