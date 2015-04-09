@@ -102,21 +102,29 @@ public class PHHomeActivity extends Activity implements OnItemClickListener {
     // Local SDK Listener
     private PHSDKListener listener = new PHSDKListener() {
 
+        /* onAccessPointsFound is automatically notified when bridges are found during doBridgeSearch() call to sm.search() */
         @Override
         public void onAccessPointsFound(List<PHAccessPoint> accessPoint) {
             Log.w(TAG, "Access Points Found. " + accessPoint.size());
 
             PHWizardAlertDialog.getInstance().closeProgressDialog();
+
             if (accessPoint != null && accessPoint.size() > 0) {
                 phHueSDK.getAccessPointsFound().clear();
                 phHueSDK.getAccessPointsFound().addAll(accessPoint);
 
+
+                /**BELOW is added in from onItemClick **/
+                connectAndSwitch();
+
+                /*
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         adapter.updateData(phHueSDK.getAccessPointsFound());
                     }
                 });
+                */
 
             }
 
@@ -138,6 +146,8 @@ public class PHHomeActivity extends Activity implements OnItemClickListener {
             prefs.setLastConnectedIPAddress(b.getResourceCache().getBridgeConfiguration().getIpAddress());
             prefs.setUsername(prefs.getUsername());
             PHWizardAlertDialog.getInstance().closeProgressDialog();
+
+
             startMainActivity();
         }
 
@@ -250,6 +260,8 @@ public class PHHomeActivity extends Activity implements OnItemClickListener {
         phHueSDK.disableAllHeartbeat();
     }
 
+
+    /** When adapter view bridge selection is clicked **/
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
@@ -268,6 +280,20 @@ public class PHHomeActivity extends Activity implements OnItemClickListener {
         }
         PHWizardAlertDialog.getInstance().showProgressDialog(R.string.connecting, PHHomeActivity.this);
         phHueSDK.connect(accessPoint);
+    }
+
+    public void connectAndSwitch() {
+        PHBridge connectedBridge = phHueSDK.getSelectedBridge();
+
+        if (connectedBridge != null) {
+            String connectedIP = connectedBridge.getResourceCache().getBridgeConfiguration().getIpAddress();
+            if (connectedIP != null) {   // We are already connected here:-
+                phHueSDK.disableHeartbeat(connectedBridge);
+                phHueSDK.disconnect(connectedBridge);
+            }
+        }
+        PHWizardAlertDialog.getInstance().showProgressDialog(R.string.connecting, PHHomeActivity.this);
+        phHueSDK.connect(phHueSDK.getAccessPointsFound().get(0));
     }
 
     public void doBridgeSearch() {
