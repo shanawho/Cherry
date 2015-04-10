@@ -17,6 +17,7 @@ import android.widget.TextView;
 import java.util.*;
 import com.example.shana.cherry.app.ColorUtil;
 
+//import com.philips.lighting.data.HueSharedPreferences;
 import com.example.shana.cherry.R;
 import com.philips.lighting.hue.sdk.PHHueSDK;
 import com.philips.lighting.model.PHBridge;

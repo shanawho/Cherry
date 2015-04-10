@@ -9,14 +9,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ListView;
 
 import com.example.shana.cherry.R;
 import com.example.shana.cherry.data.HueSharedPreferences;
-import com.example.shana.cherry.data.AccessPointListAdapter;
 import com.philips.lighting.hue.sdk.PHAccessPoint;
 import com.philips.lighting.hue.sdk.PHBridgeSearchManager;
 import com.philips.lighting.hue.sdk.PHHueSDK;
@@ -39,19 +34,17 @@ import com.philips.lighting.model.PHHueParsingError;
  *
  *
  */
-public class PHHomeActivity extends Activity implements OnItemClickListener {
+public class PHHomeActivity extends Activity {
 
     private PHHueSDK phHueSDK;
     public static final String TAG = "Cherry";
     private HueSharedPreferences prefs;
-    private AccessPointListAdapter adapter;
 
     private boolean lastSearchWasIPScan = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.bridgelistlinear);
 
         // Gets an instance of the Hue SDK.
         phHueSDK = PHHueSDK.create();
@@ -63,11 +56,6 @@ public class PHHomeActivity extends Activity implements OnItemClickListener {
         // Register the PHSDKListener to receive callbacks from the bridge.
         phHueSDK.getNotificationManager().registerSDKListener(listener);
 
-        adapter = new AccessPointListAdapter(getApplicationContext(), phHueSDK.getAccessPointsFound());
-
-        ListView accessPointList = (ListView) findViewById(R.id.bridge_list);
-        accessPointList.setOnItemClickListener(this);
-        accessPointList.setAdapter(adapter);
 
         // Try to automatically connect to the last known bridge.  For first time use this will be empty so a bridge search is automatically started.
         prefs = HueSharedPreferences.getInstance(getApplicationContext());
@@ -114,15 +102,10 @@ public class PHHomeActivity extends Activity implements OnItemClickListener {
                 phHueSDK.getAccessPointsFound().addAll(accessPoint);
 
 
-                /**BELOW is added in from onItemClick **/
-                //connectAndSwitch();
-
-
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         connectAndSwitch();
-                        // adapter.updateData(phHueSDK.getAccessPointsFound());
                     }
                 });
 
@@ -261,28 +244,6 @@ public class PHHomeActivity extends Activity implements OnItemClickListener {
         phHueSDK.disableAllHeartbeat();
     }
 
-
-    /** When adapter view bridge selection is clicked **/
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-        HueSharedPreferences prefs = HueSharedPreferences.getInstance(getApplicationContext());
-        PHAccessPoint accessPoint = (PHAccessPoint) adapter.getItem(position);
-        accessPoint.setUsername(prefs.getUsername());
-
-        PHBridge connectedBridge = phHueSDK.getSelectedBridge();
-
-        if (connectedBridge != null) {
-            String connectedIP = connectedBridge.getResourceCache().getBridgeConfiguration().getIpAddress();
-            if (connectedIP != null) {   // We are already connected here:-
-                phHueSDK.disableHeartbeat(connectedBridge);
-                phHueSDK.disconnect(connectedBridge);
-            }
-        }
-        PHWizardAlertDialog.getInstance().showProgressDialog(R.string.connecting, PHHomeActivity.this);
-        phHueSDK.connect(accessPoint);
-    }
-
     public void connectAndSwitch() {
         PHBridge connectedBridge = phHueSDK.getSelectedBridge();
 
@@ -297,6 +258,9 @@ public class PHHomeActivity extends Activity implements OnItemClickListener {
         PHAccessPoint target = phHueSDK.getAccessPointsFound().get(0);
         target.setUsername(prefs.getUsername());
         phHueSDK.connect(target);
+
+        PHWizardAlertDialog.getInstance().showProgressDialog(R.string.bridge_btn, PHHomeActivity.this);
+
     }
 
     public void doBridgeSearch() {

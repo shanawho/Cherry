@@ -12,6 +12,7 @@
     <string name="search_progress">Searching ...</string>
     <string name="connecting">Connecting ...</string>
     <string name="txt_select_smartbridge">Please select a bridge to use for this app</string>
+    <string name="bridge_btn">Please press the button on the bridge</string>
     <string name="no_bridge">No Bridge Found.   Start Bridge Search</string>
     <string name="menu_find_bridge">Find new Bridge</string>
     <string name="btn_ok">Ok</string>
