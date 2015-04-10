@@ -37,7 +37,8 @@ import org.altbeacon.beacon.BeaconParser;
 public class selectOption extends ActionBarActivity implements BeaconConsumer {
 
     // Bluetooth Beacon
-    private static final String TAG = "[Beacon Scan]";
+    private static final String DIS_TAG = "[Cherry] [Beacon Distance]";
+    private static final String STATE_TAG = "[Cherry] [State]";
     private RegionBootstrap regionBootstrap;
     private BeaconManager beaconManager;
 
@@ -169,10 +170,10 @@ public class selectOption extends ActionBarActivity implements BeaconConsumer {
                 if (beacons.size() > 0) {
                     foundBeacon = beacons.iterator().next();
                     final double distance = foundBeacon.getDistance();
-                    Log.i(TAG, "The first beacon I see is about " + foundBeacon.getDistance() + " meters away.");
+                    Log.i(DIS_TAG, "found " + foundBeacon.getDistance() + " meters away.");
                     parseDistance(distance, true);
                 } else {
-                    Log.i(TAG, "No beacons found in range");
+                    Log.i(DIS_TAG, "None.");
                     parseDistance(0, false);
                 }
             }
@@ -181,22 +182,23 @@ public class selectOption extends ActionBarActivity implements BeaconConsumer {
         try {
             beaconManager.startRangingBeaconsInRegion(new Region("myRangingUniqueId", null, null, null));
         } catch (RemoteException e) {
-            Log.i(TAG, "Unable to search for beacons.");
+            Log.i(DIS_TAG, "Unable to search for beacons.");
         }
     }
 
     protected void parseDistance(double dis, boolean any) {
-        if (any && (dis <= 1.0)) {
+        if (any && (dis <= 0.4)) {
             if (!stateOn) {
                 stateOn = true;
-                Log.d("[Hue]","Light turned ON, color="+this.userPreference);
+                Log.d(STATE_TAG,"ON, color="+this.userPreference);
                 setLightColor(this.userPreference);
             }
         } else {
             if (stateOn) {
                 stateOn = false;
-                Log.d("[Hue]", "Light turned OFF.");
-                turnLightOff();
+                Log.d(STATE_TAG, "OFF.");
+                setLightColor("#FFFFFF");
+                //turnLightOff();
             }
         }
     }
