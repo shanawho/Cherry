@@ -14,7 +14,6 @@ import android.widget.LinearLayout;
 import android.util.Log;
 import java.util.*;
 
-//import com.philips.lighting.data.AccessPointListAdapter;
 //import com.philips.lighting.data.HueSharedPreferences;
 import com.example.shana.cherry.R;
 
