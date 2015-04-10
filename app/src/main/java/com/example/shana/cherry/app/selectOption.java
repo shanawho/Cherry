@@ -49,6 +49,7 @@ public class selectOption extends ActionBarActivity implements BeaconConsumer {
     // Contextual
     String[] choices = new String[]{"3D modeling", "Digital fabrication", "Product design", "Visual design", "Web development"};
     String[] colors = new String[]{"#ef4545", "#f8971c", "#fee101", "#55b847", "#25c4f3"};
+    String userPreference = "#FFFFFF";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,7 +126,7 @@ public class selectOption extends ActionBarActivity implements BeaconConsumer {
                 public void onClick(View v) {
                     radioBtn.setBackgroundColor(Color.parseColor(colors[count]));
                     radioBtn.setTextColor(Color.parseColor("#FFFFFF"));
-                    setLightColor(colors[count]);
+                    setLightPreference(colors[count]);
 
                 }
             });
@@ -135,13 +136,25 @@ public class selectOption extends ActionBarActivity implements BeaconConsumer {
         return true;
     }
 
+    private void setLightPreference(String c) {
+        this.userPreference = c;
+    }
+
     private void setLightColor(String c) {
         for (PHLight light : allLights) {
             PHLightState lightState = new PHLightState();
+            lightState.setOn(true);
             List<Float> colorOut = ColorUtil.colorToXY(c);
             lightState.setX(colorOut.get(0));
             lightState.setY(colorOut.get(1));
             bridge.updateLightState(light, lightState);
+        }
+    }
+
+    private void turnLightOff() {
+        for (PHLight light : allLights) {
+            PHLightState lightState = new PHLightState();
+            lightState.setOn(false);
         }
     }
 
@@ -156,21 +169,10 @@ public class selectOption extends ActionBarActivity implements BeaconConsumer {
                     foundBeacon = beacons.iterator().next();
                     final double distance = foundBeacon.getDistance();
                     Log.i(TAG, "The first beacon I see is about " + foundBeacon.getDistance() + " meters away.");
-                    // TODO: once working, modify the Hue directly and get it off the UI thread.
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            parseDistance(distance, true);
-                        }
-                    });
+                    parseDistance(distance, true);
                 } else {
                     Log.i(TAG, "No beacons found in range");
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            parseDistance(0, false);
-                        }
-                    });
+                    parseDistance(0, false);
                 }
             }
         });
@@ -183,12 +185,12 @@ public class selectOption extends ActionBarActivity implements BeaconConsumer {
     }
 
     protected void parseDistance(double dis, boolean any) {
-        TextView t = (TextView)findViewById(R.id.distance_measurement);
-        if (any) {
-            String displayedDistance = Double.toString(dis)+" m";
-            t.setText("");
+        if (any && (dis <= 1.0)) {
+            Log.d("[Hue]","Light turned ON, color="+this.userPreference);
+            setLightColor(this.userPreference);
         } else {
-            t.setText("none found");
+            Log.d("[Hue]","Light turned OFF.");
+            turnLightOff();
         }
     }
 
