@@ -50,6 +50,7 @@ public class selectOption extends ActionBarActivity implements BeaconConsumer {
     String[] choices = new String[]{"3D modeling", "Digital fabrication", "Product design", "Visual design", "Web development"};
     String[] colors = new String[]{"#ef4545", "#f8971c", "#fee101", "#55b847", "#25c4f3"};
     String userPreference = "#FFFFFF";
+    boolean stateOn = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -186,11 +187,17 @@ public class selectOption extends ActionBarActivity implements BeaconConsumer {
 
     protected void parseDistance(double dis, boolean any) {
         if (any && (dis <= 1.0)) {
-            Log.d("[Hue]","Light turned ON, color="+this.userPreference);
-            setLightColor(this.userPreference);
+            if (!stateOn) {
+                stateOn = true;
+                Log.d("[Hue]","Light turned ON, color="+this.userPreference);
+                setLightColor(this.userPreference);
+            }
         } else {
-            Log.d("[Hue]","Light turned OFF.");
-            turnLightOff();
+            if (stateOn) {
+                stateOn = false;
+                Log.d("[Hue]", "Light turned OFF.");
+                turnLightOff();
+            }
         }
     }
 
