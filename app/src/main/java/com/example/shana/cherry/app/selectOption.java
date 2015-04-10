@@ -140,6 +140,9 @@ public class selectOption extends ActionBarActivity implements BeaconConsumer {
 
     private void setLightPreference(String c) {
         this.userPreference = c;
+        if (stateOn) {
+            setLightColor(c);
+        }
     }
 
     private void setLightColor(String c) {
