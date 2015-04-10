@@ -42,7 +42,7 @@ import com.philips.lighting.model.PHHueParsingError;
 public class PHHomeActivity extends Activity implements OnItemClickListener {
 
     private PHHueSDK phHueSDK;
-    public static final String TAG = "QuickStart";
+    public static final String TAG = "Cherry";
     private HueSharedPreferences prefs;
     private AccessPointListAdapter adapter;
 

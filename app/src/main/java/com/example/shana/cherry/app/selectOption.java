@@ -32,6 +32,7 @@ import org.altbeacon.beacon.startup.RegionBootstrap;
 import org.altbeacon.beacon.Region;
 import org.altbeacon.beacon.RangeNotifier;
 import org.altbeacon.beacon.BeaconManager;
+import org.altbeacon.beacon.BeaconParser;
 
 public class selectOption extends ActionBarActivity implements BeaconConsumer {
 
@@ -61,7 +62,9 @@ public class selectOption extends ActionBarActivity implements BeaconConsumer {
 
         // Beacon scan initialization
         beaconManager = BeaconManager.getInstanceForApplication(this);
+        beaconManager.getBeaconParsers().add(new BeaconParser().setBeaconLayout("m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24"));
         beaconManager.bind(this);
+
 
         // View initialization
         createRadioGroup();
