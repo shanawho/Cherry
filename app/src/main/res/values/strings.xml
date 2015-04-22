@@ -8,7 +8,7 @@
     <string name="product">Product design</string>
     <string name="visual">Visual design</string>
     <string name="webdev">Web development</string>
-    <string name="action_settings">Settings</string>
+    <string name="action_find_bridge">Find bridge</string>
     <string name="search_progress">Searching ...</string>
     <string name="connecting">Connecting ...</string>
     <string name="txt_select_smartbridge">Please select a bridge to use for this app</string>

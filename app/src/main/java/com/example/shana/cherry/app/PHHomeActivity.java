@@ -45,6 +45,7 @@ public class PHHomeActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.w(TAG, "restart home screen");
 
         // Gets an instance of the Hue SDK.
         phHueSDK = PHHueSDK.create();
@@ -74,6 +75,7 @@ public class PHHomeActivity extends Activity {
             }
         }
         else {  // First time use, so perform a bridge search.
+            Log.w(TAG, "BRIDGE SEARCH");
             doBridgeSearch();
         }
     }

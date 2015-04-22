@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="red" type="color">#ef4545</item>
+    <item name="orange" type="color">80dp</item>
+    <item name="yellow" type="color">16dp</item>
+    <item name="blue" type="color">80dp</item>
+    <item name="purple" type="color">80dp</item>
+
+
+    </resources>

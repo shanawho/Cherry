@@ -12,7 +12,38 @@
         android:layout_marginTop="17dp" />
 
 
-        <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+    <RelativeLayout
+        android:layout_width="10dp"
+        android:layout_height="100dp"
+        android:id="@+id/redbg"
+        android:background="@color/red"></RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="10dp"
+        android:layout_height="100dp"
+        android:id="@+id/orangebg"
+        android:background="@color/orange"></RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="10dp"
+        android:layout_height="100dp"
+        android:id="@+id/yellowbg"
+        android:background="@color/yellow"></RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="10dp"
+        android:layout_height="100dp"
+        android:id="@+id/bluebg"
+        android:background="@color/blue"></RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="10dp"
+        android:layout_height="100dp"
+        android:id="@+id/purplebg"
+        android:background="@color/purple"></RelativeLayout>
+
+
+    <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="45dp"
@@ -20,24 +51,5 @@
             android:orientation="vertical"
             android:id="@+id/radioGroup">
         </RadioGroup>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/nearest"
-        android:id="@+id/nearestChairText"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignBottom="@+id/distance_measurement" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="none"
-        android:id="@+id/distance_measurement"
-        android:layout_alignParentTop="true"
-        android:layout_toRightOf="@+id/specialtyText"
-        android:layout_toEndOf="@+id/specialtyText" />
-
 
 </RelativeLayout>

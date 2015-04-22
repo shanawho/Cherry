@@ -16,6 +16,7 @@ public class ResizeWidthAnimation extends Animation {
         mView = view;
         mWidth = width;
         mStartWidth = view.getWidth();
+        activated = false;
     }
 
     @Override
