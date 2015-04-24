@@ -53,12 +53,11 @@ public class selectOption extends ActionBarActivity implements BeaconConsumer {
     // Contextual
     String[] choices = new String[]{"3D modeling", "Digital fabrication", "Product design", "Visual design", "Web development"};
     String[] colors = new String[]{"#ef4545", "#f8971c", "#fee101", "#55b847", "#25c4f3"};
-    int[] backgrounds = new int[]{R.id.redbg, R.id.orangebg, R.id.yellowbg, R.id.bluebg, R.id.purplebg};
+    //int[] backgrounds = new int[]{R.id.redbg, R.id.orangebg, R.id.yellowbg, R.id.bluebg, R.id.purplebg};
     String userPreference = "#FFFFFF";
     boolean stateOn = false;
 
     // BLUETOOTH
-    private static final UUID MY_UUID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,10 +79,9 @@ public class selectOption extends ActionBarActivity implements BeaconConsumer {
         createRadioGroup();
 
         // BLUETOOTH
-        MY_UUID = UUID.fromString("6e400001-b5a3-f393-e0a9-e50e24dcca9e");
+       // MY_UUID = UUID.fromString("6e400001-b5a3-f393-e0a9-e50e24dcca9e");
 
         //FIND OUR UUID AUTOMATICALLY
-        createRfcommSocketToServiceRecord(MY_UUID);
     }
 
 
@@ -145,7 +143,7 @@ public class selectOption extends ActionBarActivity implements BeaconConsumer {
                     radioBtn.setTextColor(Color.parseColor("#FFFFFF"));
                     setLightPreference(colors[count]);
 
-                    animate(findViewById(backgrounds[count]));
+                    //animate(findViewById(backgrounds[count]));
                 }
             });
             radioGroup.addView(radioBtn);
@@ -164,7 +162,7 @@ public class selectOption extends ActionBarActivity implements BeaconConsumer {
 
 
         //
-        for (int bg : backgrounds) {
+        /*for (int bg : backgrounds) {
             View otherView = findViewById(bg);
             if (otherView != view) {
                 LayoutParams lp = view.getLayoutParams();
@@ -172,7 +170,7 @@ public class selectOption extends ActionBarActivity implements BeaconConsumer {
                 otherView.setLayoutParams(lp);
             }
         }
-
+    */
         // animate to full
         ResizeWidthAnimation anim = new ResizeWidthAnimation(view, 100);
         anim.setDuration(1000);
@@ -219,11 +217,14 @@ public class selectOption extends ActionBarActivity implements BeaconConsumer {
             public void didRangeBeaconsInRegion(Collection<Beacon> beacons, Region region) {
                 // TODO: 'region' should be defined as the active space around the chair to light.
                 Beacon foundBeacon;
+                int rssi = 0;
                 if (beacons.size() > 0) {
                     foundBeacon = beacons.iterator().next();
                     final double distance = foundBeacon.getDistance();
-                    Log.i(DIS_TAG, "found " + foundBeacon.getDistance() + " meters away.");
-                    parseDistance(distance, true);
+                    rssi = foundBeacon.getRssi();
+                    //Log.i(DIS_TAG, "found " + foundBeacon.getDistance() + " meters away.");
+                    Log.i(DIS_TAG, "found with RSSI: "+Integer.toString(rssi));
+                    parseDistance(rssi, true);
                 } else {
                     Log.i(DIS_TAG, "None.");
                     parseDistance(0, false);
@@ -238,8 +239,10 @@ public class selectOption extends ActionBarActivity implements BeaconConsumer {
         }
     }
 
-    protected void parseDistance(double dis, boolean any) {
-        if (any && (dis <= 0.4)) {
+    protected void parseDistance(int eh, boolean any) {
+        //if (any && (dis <= 0.4)) {
+        double dis = eh;
+        if (any && (dis >= -50)) {
             if (!stateOn) {
                 stateOn = true;
                 Log.d(STATE_TAG,"ON, color="+this.userPreference);
