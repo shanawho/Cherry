@@ -207,6 +207,9 @@ public class selectOption extends ActionBarActivity implements BeaconConsumer {
         for (PHLight light : allLights) {
             PHLightState lightState = new PHLightState();
             lightState.setOn(false);
+
+
+
         }
     }
 
@@ -220,9 +223,7 @@ public class selectOption extends ActionBarActivity implements BeaconConsumer {
                 int rssi = 0;
                 if (beacons.size() > 0) {
                     foundBeacon = beacons.iterator().next();
-                    final double distance = foundBeacon.getDistance();
                     rssi = foundBeacon.getRssi();
-                    //Log.i(DIS_TAG, "found " + foundBeacon.getDistance() + " meters away.");
                     Log.i(DIS_TAG, "found with RSSI: "+Integer.toString(rssi));
                     parseDistance(rssi, true);
                 } else {
@@ -240,7 +241,6 @@ public class selectOption extends ActionBarActivity implements BeaconConsumer {
     }
 
     protected void parseDistance(int eh, boolean any) {
-        //if (any && (dis <= 0.4)) {
         double dis = eh;
         if (any && (dis >= -50)) {
             if (!stateOn) {
@@ -253,7 +253,7 @@ public class selectOption extends ActionBarActivity implements BeaconConsumer {
                 stateOn = false;
                 Log.d(STATE_TAG, "OFF.");
                 setLightColor("#FFFFFF");
-                //turnLightOff();
+                turnLightOff();
             }
         }
     }
