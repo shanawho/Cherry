@@ -67,7 +67,7 @@ public class selectOption extends ActionBarActivity /*implements BeaconConsumer*
 
     // Contextual
     String[] choices = new String[]{"3D modeling", "Digital fabrication", "Product design", "Visual design", "Web development"};
-    String[] colors = new String[]{"#ef4545", "#f8971c", "#fee101", "#55b847", "#25c4f3"};
+    int[] colors = new int[]{R.color.red, R.color.orange, R.color.yellow, R.color.blue, R.color.purple};
     int[] backgrounds = new int[]{R.id.redbg, R.id.orangebg, R.id.yellowbg, R.id.bluebg, R.id.purplebg};
     String userPreference = "#FFFFFF";
     boolean stateOn = false;
@@ -83,9 +83,11 @@ public class selectOption extends ActionBarActivity /*implements BeaconConsumer*
         setContentView(R.layout.activity_select_option);
 
         // Hue initialization
+        /*
         phHueSDK = PHHueSDK.create();
         bridge = phHueSDK.getSelectedBridge();
         allLights = bridge.getResourceCache().getAllLights();
+        */
 
         /** Beacon scan initialization
         beaconManager = BeaconManager.getInstanceForApplication(this);
@@ -100,7 +102,7 @@ public class selectOption extends ActionBarActivity /*implements BeaconConsumer*
         adapter = BluetoothAdapter.getDefaultAdapter();
 
         //FIND OUR UUID AUTOMATICALLY
-        connectBluetooth();
+        //connectBluetooth();
     }
 
 
@@ -151,18 +153,18 @@ public class selectOption extends ActionBarActivity /*implements BeaconConsumer*
             radioBtn.setTextSize(20);
             radioBtn.setId(i);
             radioBtn.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
-            radioBtn.setPadding(50, 75, 0, 75);
+            radioBtn.setPadding(0, 75, 0, 75);
 
             final int count = i;
 
             radioBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    radioBtn.setBackgroundColor(Color.parseColor(colors[count]));
+                    radioBtn.setBackgroundColor(colors[count]);
                     radioBtn.setTextColor(Color.parseColor("#FFFFFF"));
-                    setLightPreference(colors[count]);
+                    //setLightPreference(colors[count]);
 
-                    animate(findViewById(backgrounds[count]));
+                    //animate(findViewById(backgrounds[count]));
                 }
             });
             radioGroup.addView(radioBtn);
@@ -279,92 +281,5 @@ public class selectOption extends ActionBarActivity /*implements BeaconConsumer*
         super.onDestroy();
         //beaconManager.unbind(this);
     }
-
-    private BluetoothSocket connectBluetooth(BluetoothDevice device) {
-        BluetoothSocket socket = null;
-        try {
-            socket = device.createRfcommSocketToServiceRecord(MY_UUID);
-            socket.connect();
-            return socket;
-        } catch (IOException e) {
-            close(socket);
-        } catch (Exception ignore) {
-            return null;
-        }
-    }
-
-
-    // Main BTLE device callback where much of the logic occurs.
-    private BluetoothGattCallback callback = new BluetoothGattCallback() {
-        // Called whenever the device connection state changes, i.e. from disconnected to connected.
-        @Override
-        public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
-            super.onConnectionStateChange(gatt, status, newState);
-            if (newState == BluetoothGatt.STATE_CONNECTED) {
-                Log.i(DIS_TAG, "Connected!");
-                updateConnectionStatus("Connected!");
-                // Discover services.
-                if (!gatt.discoverServices()) {
-                    Log.i(DIS_TAG, "Failed to start discovering services!");
-                }
-            } else if (newState == BluetoothGatt.STATE_DISCONNECTED) {
-                Log.i(DIS_TAG, "Disconnected!");
-                updateConnectionStatus("Disconnected!");
-            } else {
-                Log.i(DIS_TAG, "Connection state changed.  New state: " + newState);
-                updateConnectionStatus("Connection state changed.  New state: " + newState);
-            }
-        }
-
-        // Called when services have been discovered on the remote device.
-        // It seems to be necessary to wait for this discovery to occur before
-        // manipulating any services or characteristics.
-        @Override
-        public void onServicesDiscovered(BluetoothGatt gatt, int status) {
-            super.onServicesDiscovered(gatt, status);
-            if (status == BluetoothGatt.GATT_SUCCESS) {
-                Log.i(DIS_TAG, "Service discovery completed!");
-            } else {
-                Log.i(DIS_TAG, "Service discovery failed with status: " + status);
-            }
-            // Save reference to each characteristic.
-            tx = gatt.getService(UART_UUID).getCharacteristic(TX_UUID);
-            rx = gatt.getService(UART_UUID).getCharacteristic(RX_UUID);
-            // Setup notifications on RX characteristic changes (i.e. data received).
-            // First call setCharacteristicNotification to enable notification.
-            if (!gatt.setCharacteristicNotification(rx, true)) {
-                writeLine("Couldn't set notifications for RX characteristic!");
-            }
-            // Next update the RX characteristic's client descriptor to enable notifications.
-            if (rx.getDescriptor(CLIENT_UUID) != null) {
-                BluetoothGattDescriptor desc = rx.getDescriptor(CLIENT_UUID);
-                desc.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
-                if (!gatt.writeDescriptor(desc)) {
-                    writeLine("Couldn't write RX client descriptor value!");
-                }
-            } else {
-                writeLine("Couldn't get RX client descriptor!");
-            }
-        }
-
-
-        // BTLE device scanning callback.
-        private LeScanCallback scanCallback = new LeScanCallback() {
-            // Called when a device is found.
-            @Override
-            public void onLeScan(BluetoothDevice bluetoothDevice, int i, byte[] bytes) {
-                Log.i(DIS_TAG, "Found device: " + bluetoothDevice.getAddress() + " with name " + bluetoothDevice.getName());
-                // Check if the device has the UART service and is called pgao
-                if (parseUUIDs(bytes).contains(MY_UUID) && bluetoothDevice.getName().equals("Cherry")) {
-                    // Found a device, stop the scan.
-                    adapter.stopLeScan(scanCallback);
-                    Log.i(DIS_TAG, "Found UART service!");
-                    // Connect to the device.
-                    // Control flow will now go to the callback functions when BTLE events occur.
-                    gatt = bluetoothDevice.connectGatt(getApplicationContext(), false, callback);
-                }
-            }
-        };
-    };
 
 }

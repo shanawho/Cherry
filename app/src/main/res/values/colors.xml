@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <item name="red" type="color">#ef4545</item>
-    <item name="orange" type="color">80dp</item>
-    <item name="yellow" type="color">16dp</item>
-    <item name="blue" type="color">80dp</item>
-    <item name="purple" type="color">80dp</item>
+    <item name="orange" type="color">#F8971C</item>
+    <item name="yellow" type="color">#FEE101</item>
+    <item name="blue" type="color">#25C4F3</item>
+    <item name="purple" type="color">#9B45FF</item>
 
 
     </resources>
