@@ -49,6 +49,7 @@ import org.altbeacon.beacon.Region;
 import org.altbeacon.beacon.RangeNotifier;
 import org.altbeacon.beacon.BeaconManager;
 import org.altbeacon.beacon.BeaconParser;
+import org.altbeacon.beacon.distance.DistanceCalculator;
 
 
 public class selectOption extends ActionBarActivity implements BeaconConsumer {
@@ -59,6 +60,7 @@ public class selectOption extends ActionBarActivity implements BeaconConsumer {
 
     private RegionBootstrap regionBootstrap;
     private BeaconManager beaconManager;
+    private DistanceCalculator calc;
 
 
     // Hue
@@ -226,12 +228,15 @@ public class selectOption extends ActionBarActivity implements BeaconConsumer {
                 Beacon foundBeacon;
                 int rssi = 0;
                 int tx = 0;
+                double dis = 0.0;
                 if (beacons.size() > 0) {
                     foundBeacon = beacons.iterator().next();
+                    calc = foundBeacon.getDistanceCalculator();
                     rssi = foundBeacon.getRssi();
                     tx = foundBeacon.getTxPower();
-                    Log.i(DIS_TAG, "found with RSSI, TX: "+Integer.toString(rssi)+","+Integer.toString(tx));
-                    parseDistance(rssi, true);
+                    dis = calc.calculateDistance(rssi,tx);
+                    Log.i(DIS_TAG, "found with distance: "+Double.toString(dis));
+                    parseDistance(dis, true);
                 } else {
                     Log.i(DIS_TAG, "None.");
                     parseDistance(0, false);
@@ -246,9 +251,8 @@ public class selectOption extends ActionBarActivity implements BeaconConsumer {
         }
     }
 
-    protected void parseDistance(int eh, boolean any) {
-        double dis = eh;
-        if (any && (dis >= -50)) {
+    protected void parseDistance(double dis, boolean any) {
+        if (any && (dis > 120)) {
             if (!stateOn) {
                 stateOn = true;
                 Log.d(STATE_TAG,"ON, color="+this.userPreference);
@@ -258,7 +262,6 @@ public class selectOption extends ActionBarActivity implements BeaconConsumer {
             if (stateOn) {
                 stateOn = false;
                 Log.d(STATE_TAG, "OFF.");
-                setLightColor("#FFFFFF");
                 turnLightOff();
             }
         }
