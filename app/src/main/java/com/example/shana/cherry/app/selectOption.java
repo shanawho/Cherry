@@ -211,13 +211,14 @@ public class selectOption extends ActionBarActivity /*implements BeaconConsumer*
         for (PHLight light : allLights) {
             PHLightState lightState = new PHLightState();
             lightState.setOn(false);
+            bridge.updateLightState(light, lightState);
+
 
 
 
         }
     }
 
-    /** Beacon code
     @Override
     public void onBeaconServiceConnect() {
         beaconManager.setRangeNotifier(new RangeNotifier() {
@@ -262,7 +263,6 @@ public class selectOption extends ActionBarActivity /*implements BeaconConsumer*
             }
         }
     }
-     **/
 
     @Override
     protected void onDestroy() {
