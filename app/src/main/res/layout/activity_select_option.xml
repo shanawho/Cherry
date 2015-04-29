@@ -13,32 +13,37 @@
 
 <!--
     <RelativeLayout
-        android:layout_width="10dp"
-        android:layout_height="100dp"
+        android:layout_width="@dimen/margin_left"
+        android:layout_height="@dimen/option_height"
+        android:layout_marginTop="@dimen/margin_top"
         android:id="@+id/redbg"
         android:background="@color/red"></RelativeLayout>
 
     <RelativeLayout
-        android:layout_width="10dp"
-        android:layout_height="100dp"
+        android:layout_width="@dimen/margin_left"
+        android:layout_height="@dimen/option_height"
+        android:layout_below="@+id/redbg"
         android:id="@+id/orangebg"
         android:background="@color/orange"></RelativeLayout>
 
     <RelativeLayout
-        android:layout_width="10dp"
-        android:layout_height="100dp"
+        android:layout_width="@dimen/margin_left"
+        android:layout_height="@dimen/option_height"
+        android:layout_below="@+id/orangebg"
         android:id="@+id/yellowbg"
         android:background="@color/yellow"></RelativeLayout>
 
     <RelativeLayout
-        android:layout_width="10dp"
-        android:layout_height="100dp"
+        android:layout_width="@dimen/margin_left"
+        android:layout_height="@dimen/option_height"
+        android:layout_below="@+id/yellowbg"
         android:id="@+id/bluebg"
         android:background="@color/blue"></RelativeLayout>
 
     <RelativeLayout
-        android:layout_width="10dp"
-        android:layout_height="100dp"
+        android:layout_width="@dimen/margin_left"
+        android:layout_height="@dimen/option_height"
+        android:layout_below="@+id/bluebg"
         android:id="@+id/purplebg"
         android:background="@color/purple"></RelativeLayout>
 
@@ -46,8 +51,8 @@
     <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="45dp"
-            android:layout_marginLeft="20dp"
+            android:layout_marginTop="@dimen/margin_top"
+            android:layout_marginLeft="@dimen/option_margin_left"
             android:orientation="vertical"
             android:id="@+id/radioGroup">
         </RadioGroup>

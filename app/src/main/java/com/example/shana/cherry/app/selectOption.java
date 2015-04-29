@@ -13,6 +13,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
+import android.graphics.Typeface;
 import android.util.Log;
 import android.widget.TextView;
 
@@ -28,6 +29,18 @@ import com.philips.lighting.model.PHHueError;
 import com.philips.lighting.model.PHLight;
 import com.philips.lighting.model.PHLightState;
 
+
+import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothSocket;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothAdapter.LeScanCallback;
+import android.bluetooth.BluetoothGatt;
+import android.bluetooth.BluetoothGattCallback;
+import android.bluetooth.BluetoothGattCharacteristic;
+import android.bluetooth.BluetoothGattDescriptor;
+import java.io.IOException;
+
+
 import org.altbeacon.beacon.BeaconConsumer;
 import org.altbeacon.beacon.Beacon;
 import org.altbeacon.beacon.startup.BootstrapNotifier;
@@ -37,13 +50,16 @@ import org.altbeacon.beacon.RangeNotifier;
 import org.altbeacon.beacon.BeaconManager;
 import org.altbeacon.beacon.BeaconParser;
 
-public class selectOption extends ActionBarActivity implements BeaconConsumer {
+
+public class selectOption extends ActionBarActivity /*implements BeaconConsumer*/ {
 
     // Bluetooth Beacon
     private static final String DIS_TAG = "[Cherry] [Beacon Distance]";
     private static final String STATE_TAG = "[Cherry] [State]";
-    private RegionBootstrap regionBootstrap;
-    private BeaconManager beaconManager;
+    /**
+     private RegionBootstrap regionBootstrap;
+     private BeaconManager beaconManager;
+     */
 
     // Hue
     private PHHueSDK phHueSDK;
@@ -52,12 +68,13 @@ public class selectOption extends ActionBarActivity implements BeaconConsumer {
 
     // Contextual
     String[] choices = new String[]{"3D modeling", "Digital fabrication", "Product design", "Visual design", "Web development"};
-    String[] colors = new String[]{"#ef4545", "#f8971c", "#fee101", "#55b847", "#25c4f3"};
-    //int[] backgrounds = new int[]{R.id.redbg, R.id.orangebg, R.id.yellowbg, R.id.bluebg, R.id.purplebg};
+    int[] colors = new int[]{R.color.red, R.color.orange, R.color.yellow, R.color.blue, R.color.purple};
+    int[] backgrounds = new int[]{R.id.redbg, R.id.orangebg, R.id.yellowbg, R.id.bluebg, R.id.purplebg};
     String userPreference = "#FFFFFF";
     boolean stateOn = false;
 
     // BLUETOOTH
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,14 +82,17 @@ public class selectOption extends ActionBarActivity implements BeaconConsumer {
         setContentView(R.layout.activity_select_option);
 
         // Hue initialization
+
         phHueSDK = PHHueSDK.create();
         bridge = phHueSDK.getSelectedBridge();
         allLights = bridge.getResourceCache().getAllLights();
 
-        // Beacon scan initialization
+
+        /** Beacon scan initialization
         beaconManager = BeaconManager.getInstanceForApplication(this);
         beaconManager.getBeaconParsers().add(new BeaconParser().setBeaconLayout("m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24"));
         beaconManager.bind(this);
+         **/
 
 
         // View initialization
@@ -82,6 +102,7 @@ public class selectOption extends ActionBarActivity implements BeaconConsumer {
        // MY_UUID = UUID.fromString("6e400001-b5a3-f393-e0a9-e50e24dcca9e");
 
         //FIND OUR UUID AUTOMATICALLY
+
     }
 
 
@@ -132,18 +153,16 @@ public class selectOption extends ActionBarActivity implements BeaconConsumer {
             radioBtn.setTextSize(20);
             radioBtn.setId(i);
             radioBtn.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
-            radioBtn.setPadding(50, 75, 0, 75);
+            radioBtn.setPadding(0, 79, 0, 79);
 
             final int count = i;
 
             radioBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    radioBtn.setBackgroundColor(Color.parseColor(colors[count]));
                     radioBtn.setTextColor(Color.parseColor("#FFFFFF"));
-                    setLightPreference(colors[count]);
-
-                    //animate(findViewById(backgrounds[count]));
+                    setLightPreference(String.valueOf(getResources().getColor(colors[count])));
+                    animate(findViewById(backgrounds[count]));
                 }
             });
             radioGroup.addView(radioBtn);
@@ -152,37 +171,22 @@ public class selectOption extends ActionBarActivity implements BeaconConsumer {
         return true;
     }
 
-
+    // Enable background colors of selected options to change accordingly
     private void animate(View view) {
-        /**DisplayMetrics metrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(metrics);
 
-        metrics.heightPixels;
-        **/
-
-
-        //
-        /*for (int bg : backgrounds) {
+        for (int bg : backgrounds) {
             View otherView = findViewById(bg);
-            if (otherView != view) {
-                LayoutParams lp = view.getLayoutParams();
-                lp.width = 10;
-                otherView.setLayoutParams(lp);
+            if (otherView != view && R.dimen.margin_left != otherView.getWidth()) {
+                ResizeWidthAnimation animSmall = new ResizeWidthAnimation(otherView, (int) getResources().getDimension(R.dimen.margin_left));
+                animSmall.setDuration(300);
+                otherView.startAnimation(animSmall);
             }
         }
-    */
         // animate to full
-        ResizeWidthAnimation anim = new ResizeWidthAnimation(view, 100);
-        anim.setDuration(1000);
+        ResizeWidthAnimation anim = new ResizeWidthAnimation(view, 1200);
+        anim.setDuration(300);
         view.startAnimation(anim);
 
-
-        /** animate to small
-        this.leftFragmentWidthPx = leftFragmentWidthPx;
-        LayoutParams lp = (LayoutParams) leftFrame.getLayoutParams();
-        lp.width = leftFragmentWidthPx;
-        leftFrame.setLayoutParams(lp);
-        **/
 
     }
     private void setLightPreference(String c) {
@@ -213,6 +217,7 @@ public class selectOption extends ActionBarActivity implements BeaconConsumer {
         }
     }
 
+    /** Beacon code
     @Override
     public void onBeaconServiceConnect() {
         beaconManager.setRangeNotifier(new RangeNotifier() {
@@ -257,11 +262,12 @@ public class selectOption extends ActionBarActivity implements BeaconConsumer {
             }
         }
     }
+     **/
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        beaconManager.unbind(this);
+        //beaconManager.unbind(this);
     }
 
 }
