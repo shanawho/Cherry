@@ -11,7 +11,7 @@
         android:layout_alignParentStart="true"
         android:layout_marginTop="17dp" />
 
-<!--
+
     <RelativeLayout
         android:layout_width="@dimen/margin_left"
         android:layout_height="@dimen/option_height"
@@ -47,7 +47,7 @@
         android:id="@+id/purplebg"
         android:background="@color/purple"></RelativeLayout>
 
--->
+
     <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"

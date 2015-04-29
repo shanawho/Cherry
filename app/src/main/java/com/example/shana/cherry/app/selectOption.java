@@ -51,15 +51,15 @@ import org.altbeacon.beacon.BeaconManager;
 import org.altbeacon.beacon.BeaconParser;
 
 
-public class selectOption extends ActionBarActivity /*implements BeaconConsumer*/ {
+public class selectOption extends ActionBarActivity implements BeaconConsumer {
 
     // Bluetooth Beacon
     private static final String DIS_TAG = "[Cherry] [Beacon Distance]";
     private static final String STATE_TAG = "[Cherry] [State]";
-    /**
-     private RegionBootstrap regionBootstrap;
-     private BeaconManager beaconManager;
-     */
+
+    private RegionBootstrap regionBootstrap;
+    private BeaconManager beaconManager;
+
 
     // Hue
     private PHHueSDK phHueSDK;
@@ -88,11 +88,11 @@ public class selectOption extends ActionBarActivity /*implements BeaconConsumer*
         allLights = bridge.getResourceCache().getAllLights();
 
 
-        /** Beacon scan initialization
+        // Beacon scan initialization
         beaconManager = BeaconManager.getInstanceForApplication(this);
         beaconManager.getBeaconParsers().add(new BeaconParser().setBeaconLayout("m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24"));
         beaconManager.bind(this);
-         **/
+
 
 
         // View initialization
@@ -161,7 +161,8 @@ public class selectOption extends ActionBarActivity /*implements BeaconConsumer*
                 @Override
                 public void onClick(View v) {
                     radioBtn.setTextColor(Color.parseColor("#FFFFFF"));
-                    setLightPreference(String.valueOf(getResources().getColor(colors[count])));
+
+                    setLightPreference(String.valueOf(getResources().getString(colors[count])));
                     animate(findViewById(backgrounds[count]));
                 }
             });
@@ -213,9 +214,6 @@ public class selectOption extends ActionBarActivity /*implements BeaconConsumer*
             lightState.setOn(false);
             bridge.updateLightState(light, lightState);
 
-
-
-
         }
     }
 
@@ -227,10 +225,12 @@ public class selectOption extends ActionBarActivity /*implements BeaconConsumer*
                 // TODO: 'region' should be defined as the active space around the chair to light.
                 Beacon foundBeacon;
                 int rssi = 0;
+                int tx = 0;
                 if (beacons.size() > 0) {
                     foundBeacon = beacons.iterator().next();
                     rssi = foundBeacon.getRssi();
-                    Log.i(DIS_TAG, "found with RSSI: "+Integer.toString(rssi));
+                    tx = foundBeacon.getTxPower();
+                    Log.i(DIS_TAG, "found with RSSI, TX: "+Integer.toString(rssi)+","+Integer.toString(tx));
                     parseDistance(rssi, true);
                 } else {
                     Log.i(DIS_TAG, "None.");
@@ -267,7 +267,7 @@ public class selectOption extends ActionBarActivity /*implements BeaconConsumer*
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        //beaconManager.unbind(this);
+        beaconManager.unbind(this);
     }
 
 }
