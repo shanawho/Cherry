@@ -153,7 +153,6 @@ public class selectOption extends ActionBarActivity /*implements BeaconConsumer*
             radioBtn.setText(choices[i]);
             radioBtn.setTextSize(20);
             radioBtn.setId(i);
-            radioBtn.setTypeface(Typeface.SANS_SERIF, );
             radioBtn.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
             radioBtn.setPadding(0, 79, 0, 79);
 
