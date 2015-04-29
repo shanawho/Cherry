@@ -5,6 +5,8 @@
     <item name="yellow" type="color">#FEE101</item>
     <item name="blue" type="color">#25C4F3</item>
     <item name="purple" type="color">#9B45FF</item>
+    <item name="white" type="color">#FFFFFF</item>
 
 
-    </resources>
+
+</resources>

@@ -20,8 +20,7 @@ public class ResizeWidthAnimation extends Animation {
 
     @Override
     protected void applyTransformation(float interpolatedTime, Transformation t) {
-        int newWidth = 10000;
-
+        int newWidth = mStartWidth + (int) ((mWidth - mStartWidth) * interpolatedTime);
         mView.getLayoutParams().width = newWidth;
         mView.requestLayout();
     }

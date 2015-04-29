@@ -13,6 +13,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
+import android.graphics.Typeface;
 import android.util.Log;
 import android.widget.TextView;
 
@@ -39,7 +40,7 @@ import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattDescriptor;
 import java.io.IOException;
 
-/**
+
 import org.altbeacon.beacon.BeaconConsumer;
 import org.altbeacon.beacon.Beacon;
 import org.altbeacon.beacon.startup.BootstrapNotifier;
@@ -48,7 +49,7 @@ import org.altbeacon.beacon.Region;
 import org.altbeacon.beacon.RangeNotifier;
 import org.altbeacon.beacon.BeaconManager;
 import org.altbeacon.beacon.BeaconParser;
-**/
+
 
 public class selectOption extends ActionBarActivity /*implements BeaconConsumer*/ {
 
@@ -83,11 +84,11 @@ public class selectOption extends ActionBarActivity /*implements BeaconConsumer*
         setContentView(R.layout.activity_select_option);
 
         // Hue initialization
-        /*
+
         phHueSDK = PHHueSDK.create();
         bridge = phHueSDK.getSelectedBridge();
         allLights = bridge.getResourceCache().getAllLights();
-        */
+
 
         /** Beacon scan initialization
         beaconManager = BeaconManager.getInstanceForApplication(this);
@@ -152,19 +153,18 @@ public class selectOption extends ActionBarActivity /*implements BeaconConsumer*
             radioBtn.setText(choices[i]);
             radioBtn.setTextSize(20);
             radioBtn.setId(i);
+            radioBtn.setTypeface(Typeface.SANS_SERIF, );
             radioBtn.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
-            radioBtn.setPadding(0, 75, 0, 75);
+            radioBtn.setPadding(0, 79, 0, 79);
 
             final int count = i;
 
             radioBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    radioBtn.setBackgroundColor(colors[count]);
                     radioBtn.setTextColor(Color.parseColor("#FFFFFF"));
-                    //setLightPreference(colors[count]);
-
-                    //animate(findViewById(backgrounds[count]));
+                    setLightPreference(String.valueOf(getResources().getColor(colors[count])));
+                    animate(findViewById(backgrounds[count]));
                 }
             });
             radioGroup.addView(radioBtn);
@@ -175,35 +175,21 @@ public class selectOption extends ActionBarActivity /*implements BeaconConsumer*
 
     // Enable background colors of selected options to change accordingly
     private void animate(View view) {
-        /**DisplayMetrics metrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(metrics);
-
-        metrics.heightPixels;
-        **/
-
-
-        //
         for (int bg : backgrounds) {
             View otherView = findViewById(bg);
-            if (otherView != view) {
-                LayoutParams lp = view.getLayoutParams();
-                lp.width = 10;
-                otherView.setLayoutParams(lp);
+            if (otherView != view && R.dimen.margin_left != otherView.getWidth()) {
+                ResizeWidthAnimation animSmall = new ResizeWidthAnimation(otherView, (int) getResources().getDimension(R.dimen.margin_left));
+                animSmall.setDuration(300);
+                otherView.startAnimation(animSmall);
             }
         }
 
+
         // animate to full
-        ResizeWidthAnimation anim = new ResizeWidthAnimation(view, 100);
-        anim.setDuration(1000);
+        ResizeWidthAnimation anim = new ResizeWidthAnimation(view, 1200);
+        anim.setDuration(300);
         view.startAnimation(anim);
 
-
-        /** animate to small
-        this.leftFragmentWidthPx = leftFragmentWidthPx;
-        LayoutParams lp = (LayoutParams) leftFrame.getLayoutParams();
-        lp.width = leftFragmentWidthPx;
-        leftFrame.setLayoutParams(lp);
-        **/
 
     }
     private void setLightPreference(String c) {
