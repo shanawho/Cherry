@@ -101,7 +101,7 @@ public class selectOption extends ActionBarActivity implements BeaconConsumer {
         createRadioGroup();
 
         // BLUETOOTH
-       // MY_UUID = UUID.fromString("6e400001-b5a3-f393-e0a9-e50e24dcca9e");
+        //UUID MY_UUID = UUID.fromString("6e400001-b5a3-f393-e0a9-e50e24dcca9e");
 
         //FIND OUR UUID AUTOMATICALLY
 
@@ -252,7 +252,7 @@ public class selectOption extends ActionBarActivity implements BeaconConsumer {
     }
 
     protected void parseDistance(double dis, boolean any) {
-        if (any && (dis > 120)) {
+        if (any && (dis > 100)) {
             if (!stateOn) {
                 stateOn = true;
                 Log.d(STATE_TAG,"ON, color="+this.userPreference);
