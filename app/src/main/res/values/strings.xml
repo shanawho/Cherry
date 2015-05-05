@@ -1,7 +1,7 @@
 <resources>
-    <string name="app_name">Cherry</string>
+    <string name="app_name">lumina</string>
 
-    <string name="specialty">My specialty is:</string>
+    <string name="specialty">My specialty is</string>
     <string name="sync">SYNC TO CHAIR</string>
     <string name="modeling">3D modeling</string>
     <string name="digfab">Digital fabrication</string>

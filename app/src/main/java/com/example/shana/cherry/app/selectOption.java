@@ -112,6 +112,7 @@ public class selectOption extends ActionBarActivity implements BeaconConsumer {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_select_option, menu);
+        findViewById(R.menu.menu_select_option).setTypeface
         return true;
     }
 
