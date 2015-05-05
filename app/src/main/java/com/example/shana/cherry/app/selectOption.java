@@ -70,7 +70,7 @@ public class selectOption extends ActionBarActivity implements BeaconConsumer {
 
     // Contextual
     String[] choices = new String[]{"3D modeling", "Digital fabrication", "Product design", "Visual design", "Web development"};
-    int[] colors = new int[]{R.color.red, R.color.orange, R.color.yellow, R.color.blue, R.color.purple};
+    int[] colors = new int[]{R.color.red, R.color.orange, R.color.yellow, R.color.blue, R.color.greenlight};
     int[] backgrounds = new int[]{R.id.redbg, R.id.orangebg, R.id.yellowbg, R.id.bluebg, R.id.purplebg};
     String userPreference = "#FFFFFF";
     boolean stateOn = false;
@@ -92,10 +92,8 @@ public class selectOption extends ActionBarActivity implements BeaconConsumer {
 
         // Beacon scan initialization
         beaconManager = BeaconManager.getInstanceForApplication(this);
-        beaconManager.getBeaconParsers().add(new BeaconParser().setBeaconLayout("m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24"));
+        // beaconManager.getBeaconParsers().add(new BeaconParser().setBeaconLayout("m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24"));
         beaconManager.bind(this);
-
-
 
         // View initialization
         createRadioGroup();

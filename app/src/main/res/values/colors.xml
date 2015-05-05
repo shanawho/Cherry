@@ -4,7 +4,8 @@
     <item name="orange" type="color">#F8971C</item>
     <item name="yellow" type="color">#FEE101</item>
     <item name="blue" type="color">#002BFF</item>
-    <item name="purple" type="color">#9B45FF</item>
+    <item name="greenlight" type="color">#FFFF00</item>
+    <item name="greenselect" type="color">#00FF00</item>
     <item name="white" type="color">#FFFFFF</item>
 
 
