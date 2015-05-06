@@ -110,7 +110,6 @@ public class selectOption extends ActionBarActivity implements BeaconConsumer {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_select_option, menu);
-        findViewById(R.menu.menu_select_option).setTypeface
         return true;
     }
 
@@ -227,6 +226,7 @@ public class selectOption extends ActionBarActivity implements BeaconConsumer {
                 Beacon foundBeacon;
                 int rssi = 0;
                 int tx = 0;
+                String id1 = "";
                 double dis = 0.0;
                 if (beacons.size() > 0) {
                     foundBeacon = beacons.iterator().next();
@@ -234,8 +234,11 @@ public class selectOption extends ActionBarActivity implements BeaconConsumer {
                     rssi = foundBeacon.getRssi();
                     tx = foundBeacon.getTxPower();
                     dis = calc.calculateDistance(rssi,tx);
-                    Log.i(DIS_TAG, "found with distance: "+Double.toString(dis));
-                    parseDistance(dis, true);
+                    id1 = foundBeacon.getId1().toHexString();
+                    if (id1.equals("00010203040506070809101112131415")) {
+                        Log.i(DIS_TAG, "found with distance: " + Double.toString(dis));
+                        parseDistance(dis, true);
+                    }
                 } else {
                     Log.i(DIS_TAG, "None.");
                     parseDistance(0, false);
