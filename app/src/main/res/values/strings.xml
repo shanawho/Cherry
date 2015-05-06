@@ -20,4 +20,5 @@
     <string name="txt_could_not_connect">No connection</string>
     <string name="title_error">Error</string>
     <string name="nearest">Nearest Chair: </string>
+    <string name="show_distance">Toggle distances</string>
 </resources>

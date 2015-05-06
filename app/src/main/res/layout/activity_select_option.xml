@@ -39,15 +39,15 @@
         android:layout_width="@dimen/margin_left"
         android:layout_height="@dimen/option_height"
         android:layout_below="@+id/yellowbg"
-        android:id="@+id/bluebg"
-        android:background="@color/blue"></RelativeLayout>
+        android:id="@+id/greenbg"
+        android:background="@color/greenselect"></RelativeLayout>
 
     <RelativeLayout
         android:layout_width="@dimen/margin_left"
         android:layout_height="@dimen/option_height"
-        android:layout_below="@+id/bluebg"
-        android:id="@+id/purplebg"
-        android:background="@color/greenselect"></RelativeLayout>
+        android:layout_below="@+id/greenbg"
+        android:id="@+id/bluebg"
+        android:background="@color/blue"></RelativeLayout>
 
 
     <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
@@ -59,4 +59,10 @@
             android:id="@+id/radioGroup">
         </RadioGroup>
 
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/option_height"
+        android:layout_below="@+id/bluebg"
+        android:visibility="invisible"
+        android:id="@+id/showDistance"/>
 </RelativeLayout>

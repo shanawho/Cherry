@@ -61,6 +61,12 @@ public class selectOption extends ActionBarActivity implements BeaconConsumer {
     private RegionBootstrap regionBootstrap;
     private BeaconManager beaconManager;
     private DistanceCalculator calc;
+    private double lastDistance = -1;
+    private ArrayList<Double> distances = new ArrayList(3) {{
+        add(0.0);
+        add(0.0);
+        add(0.0);
+    }};
 
 
     // Hue
@@ -70,8 +76,8 @@ public class selectOption extends ActionBarActivity implements BeaconConsumer {
 
     // Contextual
     String[] choices = new String[]{"3D modeling", "Digital fabrication", "Product design", "Visual design", "Web development"};
-    int[] colors = new int[]{R.color.red, R.color.orange, R.color.yellow, R.color.blue, R.color.greenlight};
-    int[] backgrounds = new int[]{R.id.redbg, R.id.orangebg, R.id.yellowbg, R.id.bluebg, R.id.purplebg};
+    int[] colors = new int[]{R.color.red, R.color.orange, R.color.yellow, R.color.greenlight, R.color.blue};
+    int[] backgrounds = new int[]{R.id.redbg, R.id.orangebg, R.id.yellowbg, R.id.greenbg, R.id.bluebg};
     String userPreference = "#FFFFFF";
     boolean stateOn = false;
 
@@ -121,9 +127,14 @@ public class selectOption extends ActionBarActivity implements BeaconConsumer {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_find_bridge) {
-            Intent intent = new Intent(getApplicationContext(), PHHomeActivity.class);
-            startActivity(intent);
+        if (id == R.id.action_show_distance) {
+            TextView text = (TextView) findViewById(R.id.showDistance);
+            if (text.getVisibility() == View.INVISIBLE) {
+                text.setVisibility(View.VISIBLE);
+            } else {
+                text.setVisibility(View.INVISIBLE);
+            }
+
             return true;
         }
 
@@ -228,15 +239,25 @@ public class selectOption extends ActionBarActivity implements BeaconConsumer {
                 int tx = 0;
                 String id1 = "";
                 double dis = 0.0;
+                final double dis2;
                 if (beacons.size() > 0) {
                     foundBeacon = beacons.iterator().next();
                     calc = foundBeacon.getDistanceCalculator();
                     rssi = foundBeacon.getRssi();
                     tx = foundBeacon.getTxPower();
-                    dis = calc.calculateDistance(rssi,tx);
+                    dis = calc.calculateDistance(rssi, tx);
+                    dis2 = dis;
                     id1 = foundBeacon.getId1().toHexString();
                     if (id1.equals("00010203040506070809101112131415")) {
                         Log.i(DIS_TAG, "found with distance: " + Double.toString(dis));
+
+                        runOnUiThread(new Runnable(){
+                            @Override
+                            public void run(){
+                                ((TextView) findViewById(R.id.showDistance)).setText(Double.toString(dis2));
+                            }
+
+                        });
                         parseDistance(dis, true);
                     }
                 } else {
@@ -254,19 +275,50 @@ public class selectOption extends ActionBarActivity implements BeaconConsumer {
     }
 
     protected void parseDistance(double dis, boolean any) {
-        if (any && (dis > 100)) {
-            if (!stateOn) {
-                stateOn = true;
-                Log.d(STATE_TAG,"ON, color="+this.userPreference);
-                setLightColor(this.userPreference);
-            }
-        } else {
-            if (stateOn) {
-                stateOn = false;
-                Log.d(STATE_TAG, "OFF.");
-                turnLightOff();
+
+        if (filterDistances(dis)) {
+            if (any && (dis > 100)) {
+                if (!stateOn) {
+                    stateOn = true;
+                    Log.d(STATE_TAG, "ON, color=" + this.userPreference);
+                    setLightColor(this.userPreference);
+                }
+            } else {
+                if (stateOn) {
+                    stateOn = false;
+                    Log.d(STATE_TAG, "OFF.");
+                    turnLightOff();
+                }
             }
         }
+    }
+
+    private boolean filterDistances(double currentDistance) {
+        // if first time called
+        if (currentDistance == Double.POSITIVE_INFINITY || currentDistance == 0.0) {
+            return false;
+        }
+        if (distances.get(0)==0) {
+            distances.set(0,currentDistance);
+            return true;
+        }
+
+        // otherwise, compare
+        double val1 = distances.get(0);
+        double val2 = distances.get(1);
+        double val3 = distances.get(2);
+        double divisor = 0.0;
+        if (val1 > 0.0) { divisor += 1.0; }
+        if (val2 > 0.0) { divisor += 1.0; }
+        if (val3 > 0.0) { divisor += 1.0; }
+        double avg = (val1+val2+val3)/divisor;
+        if (Math.abs(currentDistance-avg)<1000) {
+            // update
+            distances.remove(2);
+            distances.add(0, currentDistance);
+            return true;
+        }
+        return false;
     }
 
     @Override
